@@ -19,7 +19,3 @@ def square_char(char: int) -> bool:
     if 0x3400 <= char <= 0x4DBF:
         return True
     return False
-
-def ascii_char(char: int) -> bool:
-    """Checks if the character is in ASCII range"""
-    return char < 128
