@@ -14,7 +14,6 @@ class WBMPBitmap:
 
         # WBMP always uses 1 bit per pixel
         self.BPP = 1
-        self.BYTE_ALIGN = True
 
         if WBMPBitmap.cached_path == file_path:
             # Use the cached buffer rather than reloading
@@ -54,6 +53,8 @@ class WBMPBitmap:
     
     @staticmethod
     def _wbmp_dealign(buf, width, height):
+        if width & 7 == 0:
+            return bytearray(buf)
         src_stride = (width + 7) >> 3
         total_bits = width * height
         dst_len = (total_bits + 7) >> 3
