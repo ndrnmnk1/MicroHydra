@@ -45,6 +45,7 @@ from font import vga2_16x32 as font
 from launcher.icons import appicons
 from lib import battlevel, display, sdcard, userinput
 from lib.display.rawbitmap import RawBitmap
+from lib.display.wbmpbitmap import WBMPBitmap
 from lib.display.char_util import square_char
 from lib.hydra import beeper, loader, statusbar
 from lib.hydra.config import Config
@@ -286,7 +287,6 @@ def launch_app(app_path):
     if app_path.endswith(".cli.py"):
         loader.launch_app(APP_PATHS['Terminal'], f"${app_path}")
     loader.launch_app(app_path)
-    
 
 def center_text_x(text: str) -> int:
     """Calculate the x coordinate to draw a text string, to make it horizontally centered.
@@ -509,7 +509,7 @@ class IconWidget:
                 with open(self.drawn_icon, 'rb') as f:
                     f.readinto(self.buf)
 
-        if isinstance(self.drawn_icon, RawBitmap):
+        if isinstance(self.drawn_icon, RawBitmap) or isinstance(self.drawn_icon, WBMPBitmap):
             self._draw_bitmap_icon(self.drawn_icon)
 
         if isinstance(self.drawn_icon, int):
@@ -545,7 +545,7 @@ class IconWidget:
             # too many ways for `os.listdir` to fail here, so just capture the error:
             try:
                 if 'icon.wbmp' in os.listdir(current_app_path):
-                    return RawBitmap(f"{current_app_path}/icon.wbmp", (CONFIG.palette[2], CONFIG.palette[8]))
+                    return WBMPBitmap(f"{current_app_path}/icon.wbmp", (CONFIG.palette[2], CONFIG.palette[8]))
                 elif 'icon.raw' in os.listdir(current_app_path):
                     return RawBitmap(f"{current_app_path}/icon.raw", (CONFIG.palette[2], CONFIG.palette[8]))
             except OSError:
